@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 # Set Streamlit page configuration
 st.set_page_config(
@@ -15,7 +16,7 @@ st.title("Network Traffic Analyzer")
 st.sidebar.header("User Input")
 
 # Upload Data
-uploaded_file = st.sidebar.file_uploader("Upload a PCAP file for analysis", type=["pcap", "pcapng", "CSV"])
+uploaded_file = st.sidebar.file_uploader("Upload a CSV file for analysis", type=["csv"])
 
 # Options for Analysis
 show_summary = st.sidebar.checkbox("Show Traffic Summary")
@@ -30,18 +31,28 @@ st.sidebar.write("Developed by [Your Name]")
 if uploaded_file:
     st.success("File successfully uploaded. Analyzing...")
 
-    # Perform analysis on uploaded_file (Use your analysis code here)
-    # Assuming you have a DataFrame or analysis results to display
+    # Load the uploaded CSV file into a DataFrame
+    try:
+        data = pd.read_csv(uploaded_file)
+    except Exception as e:
+        st.error(f"Error loading CSV file: {e}")
+        data = None
 
-    if show_summary:
-        st.subheader("Traffic Summary")
-        # Display summary data here (e.g., value counts of different packet categories)
-        st.write("Summary data will be displayed here.")
-if show_visualizations:
-        st.subheader("Traffic Visualizations")
-        # Display visualizations here (e.g., text-based visualizations)
-        st.write("Visualizations will be displayed here.")
-        st.write("Example Text-Based Visualization:")
-        st.write("- Packet Category 1: 30%")
-        st.write("- Packet Category 2: 50%")
-        st.write("- Packet Category 3: 20%")
+    if data is not None:
+        # Display a preview of the uploaded data
+        st.subheader("Uploaded Data Preview")
+        st.write(data)
+
+        if show_summary:
+            st.subheader("Traffic Summary")
+            # Display summary data here (e.g., value counts of different packet categories)
+            st.write(data['Packet_Category'].value_counts())
+
+        if show_visualizations:
+            st.subheader("Traffic Visualizations")
+            # Display visualizations here using Streamlit widgets
+            
+            # Example: Display a bar chart using Streamlit's bar_chart widget
+            st.bar_chart(data['Packet_Category'].value_counts())
+
+# Note: You can add optimization code or analysis as needed.
