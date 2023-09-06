@@ -9,7 +9,7 @@ st.sidebar.header("User Input")
 
 # Upload Data
 st.sidebar.subheader("Upload Network Traffic Data")
-uploaded_file = st.sidebar.file_uploader("Choose a PCAP file for analysis", type=["pcap", "pcapng"])
+uploaded_file = st.sidebar.file_uploader("Choose a PCAP file for analysis", type=["pcap", "pcapng", "CSV"])
 
 # Options for Analysis
 st.sidebar.subheader("Select Analysis Options")
@@ -42,4 +42,4 @@ if uploaded_file:
 # About Section
 st.sidebar.header("About")
 st.sidebar.write("This web app is designed to analyze network traffic data and provide insights.")
-st.sidebar.write("Developed by [Your Name]")
+st.sidebar.write("Developed by ABDULRASHEED")
