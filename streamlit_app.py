@@ -3,16 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-@st.cache(allow_output_mutation=True)
-def plot_pie_chart(data):
-    plt.figure(figsize=(8, 8))
-    sns.set_palette("Set3")
-    data['Packet_Category'].value_counts().plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette())
-    plt.title("Packet Category Distribution")
-    return plt
-
-# Rest of your Streamlit app code
-
 # Set Streamlit page configuration
 st.set_page_config(
     page_title="Network Traffic Analyzer",
@@ -37,6 +27,14 @@ st.sidebar.subheader("Select Analysis Options")
 show_summary = st.sidebar.checkbox("Show Traffic Summary")
 show_visualizations = st.sidebar.checkbox("Show Visualizations")
 
+# Function to Plot Pie Chart
+@st.cache(allow_output_mutation=True)
+def plot_pie_chart(data):
+    plt.figure(figsize=(8, 8))
+    sns.set_palette("Set3")
+    data['Packet_Category'].value_counts().plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette())
+    plt.title("Packet Category Distribution")
+
 # Main Content
 st.subheader("Network Traffic Analysis")
 
@@ -60,13 +58,10 @@ if uploaded_file:
         # Display visualizations here (e.g., pie chart of packet categories)
 
         if 'analysis_results' in locals():
-            plt.figure(figsize=(8, 8))
-            sns.set_palette("Set3")
-            analysis_results['Packet_Category'].value_counts().plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette())
-            plt.title("Packet Category Distribution")
+            plot_pie_chart(analysis_results)
             st.pyplot()
 
 # About Section
 st.sidebar.header("About")
 st.sidebar.write("This web app is designed to analyze network traffic data and provide insights.")
-st.sidebar.write("Developed by Abdoolgram")
+st.sidebar.write("Developed by [Your Name]")
