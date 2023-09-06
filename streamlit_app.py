@@ -1,38 +1,45 @@
-from collections import namedtuple
-import altair as alt
-import math
-import pandas as pd
 import streamlit as st
+import pandas as pd
 
-"""
-# Welcome to Streamlit!
+# Title
+st.title("Network Traffic Analyzer")
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:
+# Sidebar - User Input
+st.sidebar.header("User Input")
 
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+# Upload Data
+st.sidebar.subheader("Upload Network Traffic Data")
+uploaded_file = st.sidebar.file_uploader("Choose a PCAP file for analysis", type=["pcap", "pcapng"])
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+# Options for Analysis
+st.sidebar.subheader("Select Analysis Options")
+show_summary = st.sidebar.checkbox("Show Traffic Summary")
+show_visualizations = st.sidebar.checkbox("Show Visualizations")
 
+# Main Content
+st.subheader("Network Traffic Analysis")
 
-with st.echo(code_location='below'):
-    total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
-    num_turns = st.slider("Number of turns in spiral", 1, 100, 9)
+# Data Upload and Analysis
+if uploaded_file:
+    st.success("File successfully uploaded. Analyzing...")
 
-    Point = namedtuple('Point', 'x y')
-    data = []
+    # Perform analysis on uploaded_file (Use your analysis code here)
+    # Assuming analysis results are stored in a pandas DataFrame called 'analysis_results'
 
-    points_per_turn = total_points / num_turns
+    if show_summary:
+        st.subheader("Traffic Summary")
+        # Display summary data here
+        
+    if show_visualizations:
+        st.subheader("Traffic Visualizations")
+        # Display visualizations here
+    
+    if st.button("Save Analysis Results as CSV"):
+        # Save analysis_results DataFrame to a CSV file
+        analysis_results.to_csv("network_traffic_analysis.csv", index=False)
+        st.success("Analysis results saved as 'network_traffic_analysis.csv'")
 
-    for curr_point_num in range(total_points):
-        curr_turn, i = divmod(curr_point_num, points_per_turn)
-        angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / total_points
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
-        data.append(Point(x, y))
-
-    st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-        .mark_circle(color='#0068c9', opacity=0.5)
-        .encode(x='x:Q', y='y:Q'))
+# About Section
+st.sidebar.header("About")
+st.sidebar.write("This web app is designed to analyze network traffic data and provide insights.")
+st.sidebar.write("Developed by [Your Name]")
