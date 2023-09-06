@@ -15,7 +15,7 @@ st.title("Network Traffic Analyzer")
 st.sidebar.header("User Input")
 
 # Upload Data
-uploaded_file = st.sidebar.file_uploader("Upload a PCAP file for analysis", type=["pcap", "pcapng"])
+uploaded_file = st.sidebar.file_uploader("Upload a PCAP file for analysis", type=["pcap", "pcapng", "CSV"])
 
 # Options for Analysis
 show_summary = st.sidebar.checkbox("Show Traffic Summary")
