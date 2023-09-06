@@ -20,6 +20,7 @@ show_visualizations = st.sidebar.checkbox("Show Visualizations")
 st.subheader("Network Traffic Analysis")
 
 # Data Upload and Analysis
+# Data Upload and Analysis
 if uploaded_file:
     st.success("File successfully uploaded. Analyzing...")
 
@@ -35,11 +36,8 @@ if uploaded_file:
         # Display visualizations here
     
     if st.button("Save Analysis Results as CSV"):
-        # Save analysis_results DataFrame to a CSV file
-        analysis_results.to_csv("network_traffic_analysis.csv", index=False)
-        st.success("Analysis results saved as 'network_traffic_analysis.csv'")
-
-# About Section
-st.sidebar.header("About")
-st.sidebar.write("This web app is designed to analyze network traffic data and provide insights.")
-st.sidebar.write("Developed by ABDULRASHEED")
+        if 'analysis_results' in locals():  # Check if the variable is defined
+            analysis_results.to_csv("network_traffic_analysis.csv", index=False)
+            st.success("Analysis results saved as 'network_traffic_analysis.csv'")
+        else:
+            st.warning("No analysis results available. Please ensure your analysis code is executed correctly.")
