@@ -3,6 +3,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+@st.cache(allow_output_mutation=True)
+def plot_pie_chart(data):
+    plt.figure(figsize=(8, 8))
+    sns.set_palette("Set3")
+    data['Packet_Category'].value_counts().plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette())
+    plt.title("Packet Category Distribution")
+    return plt
+
+# Rest of your Streamlit app code
+
 # Set Streamlit page configuration
 st.set_page_config(
     page_title="Network Traffic Analyzer",
