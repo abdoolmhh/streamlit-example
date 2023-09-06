@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Set Streamlit page configuration
 st.set_page_config(
@@ -46,13 +48,20 @@ if uploaded_file:
         if show_summary:
             st.subheader("Traffic Summary")
             # Display summary data here (e.g., value counts of different packet categories)
-            st.write(data['Packet_Category'].value_counts())
+            summary_data = data['Packet_Category'].value_counts().reset_index()
+            summary_data.columns = ['Packet Category', 'Count']
+            st.write(summary_data)
 
         if show_visualizations:
             st.subheader("Traffic Visualizations")
             # Display visualizations here using Streamlit widgets
             
-            # Example: Display a bar chart using Streamlit's bar_chart widget
-            st.bar_chart(data['Packet_Category'].value_counts())
+            # Example: Display a pie chart using Streamlit's pie_chart widget
+            pie_chart_data = data['Packet_Category'].value_counts()
+            st.write(pie_chart_data)
+            plt.figure(figsize=(8, 8))
+            sns.set_palette("Set3")
+            pie_chart = plt.pie(pie_chart_data, labels=pie_chart_data.index, autopct='%1.1f%%', colors=sns.color_palette())
+            st.pyplot(plt)
 
 # Note: You can add optimization code or analysis as needed.
