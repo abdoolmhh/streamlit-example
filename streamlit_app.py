@@ -1,58 +1,58 @@
+# Import necessary libraries
 import streamlit as st
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
-# Set Streamlit page configuration
-st.set_page_config(
-    page_title="Network Traffic Analyzer",
-    page_icon="🌐",
-    layout="wide",
-    initial_sidebar_state="expanded",
+# Title and description
+st.title("Network Traffic Analysis Tool")
+st.write("Upload your network traffic data file to analyze and visualize it.")
+
+# File upload
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+
+if uploaded_file is not None:
+    # Read data into a DataFrame
+    data = pd.read_csv(uploaded_file)
+
+    # Data summary
+    st.subheader("Data Summary")
+    st.write(data.head())
+
+    # Data analysis options
+    analysis_option = st.selectbox("Select Analysis Type", ["Summary Statistics", "Visualization"])
+
+    if analysis_option == "Summary Statistics":
+        # Display summary statistics
+        st.subheader("Summary Statistics")
+        st.write(data.describe())
+
+    elif analysis_option == "Visualization":
+        # Data visualization options
+        visualization_option = st.selectbox("Select Visualization Type", ["Histogram", "Line Plot"])
+
+        if visualization_option == "Histogram":
+            # Plot a histogram
+            selected_column = st.selectbox("Select a Column", data.columns)
+            st.subheader(f"Histogram of {selected_column}")
+            plt.hist(data[selected_column], bins=20)
+            st.pyplot()
+
+        elif visualization_option == "Line Plot":
+            # Plot a line chart
+            x_column = st.selectbox("Select X-Axis Column", data.columns)
+            y_column = st.selectbox("Select Y-Axis Column", data.columns)
+            st.subheader(f"Line Plot: {x_column} vs. {y_column}")
+            plt.plot(data[x_column], data[y_column])
+            st.pyplot()
+
+# About section
+st.sidebar.title("About")
+st.sidebar.info(
+    "This is a simple Network Traffic Analysis Tool created using Streamlit. "
+    "Upload your CSV file and choose the type of analysis or visualization you want to perform."
 )
 
-# Title
-st.title("Network Traffic Analyzer")
+# Footer
+st.sidebar.footer("Built with ❤️ by Your Name")
 
-# Sidebar - User Input
-st.sidebar.header("User Input")
-
-# Upload Data
-uploaded_file = st.sidebar.file_uploader("Upload a CSV file for analysis", type=["csv"])
-
-# Options for Analysis
-show_summary = st.sidebar.checkbox("Show Traffic Summary")
-show_visualizations = st.sidebar.checkbox("Show Visualizations")
-
-# Main Content
-st.sidebar.header("About")
-st.sidebar.write("This web app analyzes network traffic data and provides insights.")
-st.sidebar.write("Developed by [Your Name]")
-
-# Data Upload and Analysis
-if uploaded_file:
-    st.success("File successfully uploaded. Analyzing...")
-
-    # Load the uploaded CSV file into a DataFrame
-    try:
-        data = pd.read_csv(uploaded_file)
-    except Exception as e:
-        st.error(f"Error loading CSV file: {e}")
-        data = None
-
-    if data is not None:
-        # Display a preview of the uploaded data
-        st.subheader("Uploaded Data Preview")
-        st.write(data)
-
-        if show_summary:
-            st.subheader("Traffic Summary")
-            # Display summary data here (e.g., value counts of different packet categories)
-            summary_data = data['Packet_Category'].value_counts().reset_index()
-            summary_data.columns = ['Packet Category', 'Count']
-            st.write(summary_data)
-
-        if show_visualizations:
-            st.subheader("Traffic Visualizations")
-            # Display visualizations here using Streamlit widgets
-            # You can add other Streamlit widgets like bar_chart, line_chart, etc. here
-
-# Note: You can add optimization code or analysis as needed.
