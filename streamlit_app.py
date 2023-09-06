@@ -54,5 +54,5 @@ st.sidebar.info(
 )
 
 # Footer
-st.sidebar.footer("Built with ❤️ by Your Name")
+st.sidebar.text("Built with ❤️ by Your Name")
 
