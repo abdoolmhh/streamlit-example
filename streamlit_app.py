@@ -4,6 +4,16 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Create a Matplotlib figure and axis
+fig, ax = plt.subplots()
+ax.scatter([1, 2, 3], [1, 2, 3])
+
+# Display the figure using st.pyplot()
+st.pyplot(fig)
+
+
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
 # Title and description
 st.title("Network Traffic Analysis Tool")
 st.write("Upload your network traffic data file to analyze and visualize it.")
