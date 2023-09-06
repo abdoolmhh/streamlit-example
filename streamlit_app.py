@@ -37,8 +37,11 @@ if uploaded_file:
         st.subheader("Traffic Summary")
         # Display summary data here (e.g., value counts of different packet categories)
         st.write("Summary data will be displayed here.")
-
-    if show_visualizations:
+if show_visualizations:
         st.subheader("Traffic Visualizations")
         # Display visualizations here (e.g., text-based visualizations)
         st.write("Visualizations will be displayed here.")
+        st.write("Example Text-Based Visualization:")
+        st.write("- Packet Category 1: 30%")
+        st.write("- Packet Category 2: 50%")
+        st.write("- Packet Category 3: 20%")
