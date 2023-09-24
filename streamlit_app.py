@@ -1,68 +1,37 @@
-# Import necessary libraries
 import streamlit as st
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+import pyshark
 
-# Create a Matplotlib figure and axis
-fig, ax = plt.subplots()
-ax.scatter([1, 2, 3], [1, 2, 3])
+# Create a title and a sidebar
+st.title ("Packet Capture")
+st.sidebar.header ("Options")
 
-# Display the figure using st.pyplot()
-st.pyplot(fig)
+# Get the interface and filter from the user
+interface = st.sidebar.selectbox ("Select interface", ["1", "2", "3"])
+filter = st.sidebar.text_input ("Enter filter", value="http")
 
-
-st.set_option('deprecation.showPyplotGlobalUse', False)
-
-# Title and description
-st.title("Network Traffic Analysis Tool")
-st.write("Upload your network traffic data file to analyze and visualize it.")
-
-# File upload
-uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-
-if uploaded_file is not None:
-    # Read data into a DataFrame
-    data = pd.read_csv(uploaded_file)
-
-    # Data summary
-    st.subheader("Data Summary")
-    st.write(data.head())
-
-    # Data analysis options
-    analysis_option = st.selectbox("Select Analysis Type", ["Summary Statistics", "Visualization"])
-
-    if analysis_option == "Summary Statistics":
-        # Display summary statistics
-        st.subheader("Summary Statistics")
-        st.write(data.describe())
-
-    elif analysis_option == "Visualization":
-        # Data visualization options
-        visualization_option = st.selectbox("Select Visualization Type", ["Histogram", "Line Plot"])
-
-        if visualization_option == "Histogram":
-            # Plot a histogram
-            selected_column = st.selectbox("Select a Column", data.columns)
-            st.subheader(f"Histogram of {selected_column}")
-            plt.hist(data[selected_column], bins=20)
-            st.pyplot()
-
-        elif visualization_option == "Line Plot":
-            # Plot a line chart
-            x_column = st.selectbox("Select X-Axis Column", data.columns)
-            y_column = st.selectbox("Select Y-Axis Column", data.columns)
-            st.subheader(f"Line Plot: {x_column} vs. {y_column}")
-            plt.plot(data[x_column], data[y_column])
-            st.pyplot()
-
-# About section
-st.sidebar.title("About")
-st.sidebar.info(
-    "This is a simple Network Traffic Analysis Tool created using Streamlit. "
-    "Upload your CSV file and choose the type of analysis or visualization you want to perform."
-)
-
-# Footer
-st.sidebar.text("Built with ❤️ by Your Name")
-
+# Create a button to start capturing
+if st.sidebar.button ("Start"):
+    # Capture packets from the selected interface and filter
+    capture = pyshark.LiveCapture (interface=interface, display_filter=filter)
+    # Create an empty dataframe to store the packet data
+    df = pd.DataFrame (columns=["Source IP", "Destination IP", "HTTP Method", "HTTP Host", "HTTP URI"])
+    # Loop through captured packets and append them to the dataframe
+    for packet in capture.sniff_continuously ():
+        df = df.append ({
+            "Source IP": packet.ip.src,
+            "Destination IP": packet.ip.dst,
+            "HTTP Method": packet.http.request_method,
+            "HTTP Host": packet.http.host,
+            "HTTP URI": packet.http.request_uri
+        }, ignore_index=True)
+        # Display the dataframe as a table
+        st.table (df)
+        # Display a chart of packets by source IP address
+        st.bar_chart (df["Source IP"].value_counts ())
+        # Create a button to stop capturing
+        if st.button ("Stop"):
+            # Terminate the script execution
+            st.stop ()
+    # Create a button to download the captured packets as a CSV file
+    st.download_button ("Download CSV", df.to_csv (), file_name="packets.csv")
